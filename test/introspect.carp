@@ -6,6 +6,7 @@
 (def bar 2)
 (deftype Foo [x Int])
 (deftype Bar (Of [Int]))
+(deftype SumtypeWithOnlyVariants One Two)
 (definterface baz (Fn [a] a))
 (defmodule Qux (defn id [x] x))
 
@@ -51,6 +52,9 @@
     (test-sumtype? Bar)
     "sumtype? works as expected")
   (assert-true test
+    (test-sumtype? SumtypeWithOnlyVariants)
+    "sumtype? works with sumtypes with only variants")
+  (assert-true test
     (test-interface? baz)
     "interface? works as expected")
   (assert-true test
@@ -67,5 +71,5 @@
   (assert-equal test
     6
     (Array.reduce (Introspect.with-copy add 1) 0 &[1 2 3])
-    "with-copy works as expected")
-)
+    "with-copy works as expected"))
+
