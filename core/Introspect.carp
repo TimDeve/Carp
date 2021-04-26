@@ -110,21 +110,19 @@
 - Otherwise it returns an empty list.")
   (defndynamic arguments [binding]
     (let [s (s-expr binding)]
-    (if (empty? s)
-        0
-    (cond
-        (Introspect.external? binding)
-          (if (list? (caddr s))
-              (car (cdaddr s))
-              '())
-        (Introspect.command? binding) (caddr s)
-        (Introspect.primitive? binding) (caddr s)
-        (Introspect.interface? binding) (car (cdaddr s))
-        (Introspect.function? binding) (caddr s)
-        (Introspect.struct? binding) (map car (List.pairs (caddr s)))
-        (Introspect.sumtype? binding) (map (fn [arr]
-        (cadr arr)) (cddr s))
-        '()))))
+     (if (empty? s)
+         0
+         (cond
+           (Introspect.command? binding)   (caddr s)
+           (Introspect.primitive? binding) (caddr s)
+           (Introspect.interface? binding) (car (cdaddr s))
+           (Introspect.function? binding)  (caddr s)
+           (Introspect.struct? binding)    (map car (List.pairs (caddr s)))
+           (Introspect.sumtype? binding)   (map (fn [arr] (cadr arr)) (cddr s))
+           (Introspect.external? binding)  (if (list? (caddr s))
+                                               (car (cdaddr s))
+                                               '())
+           '()))))
 
   (doc macro?
     "Is this binding a macro?")
@@ -194,5 +192,5 @@
           call (cons function (map (fn [x] (if (= target x) prox x)) local-names))]
       (if (> pos (Introspect.arity (eval function)))
           (macro-error "with-copy error: the specified argument position is greater than the given function's arity.")
-          (list 'ref (list 'fn local-names call)))))
-)
+          (list 'ref (list 'fn local-names call))))))
+
